@@ -1,5 +1,6 @@
 package com.example.helloworld;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -9,11 +10,11 @@ import java.util.stream.Stream;
 
 class Sale {
     private String shopId;
-    private String date;
+    private LocalDate date;
     private double amount;
 
     // コンストラクタ、ゲッター、セッター
-    public Sale(String shopId, String date, double amount) {
+    public Sale(String shopId, LocalDate date, double amount) {
         this.shopId = shopId;
         this.date = date;
         this.amount = amount;
@@ -23,18 +24,18 @@ class Sale {
         return shopId;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 }
 
 class Cancellation {
     private String shopId;
-    private String date;
+    private LocalDate date;
     private double cancelAmount;
 
     // コンストラクタ、ゲッター、セッター
-    public Cancellation(String shopId, String date, double cancelAmount) {
+    public Cancellation(String shopId, LocalDate date, double cancelAmount) {
         this.shopId = shopId;
         this.date = date;
         this.cancelAmount = cancelAmount;
@@ -44,17 +45,17 @@ class Cancellation {
         return shopId;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 }
 
 class Result {
     private String shopId;
-    private String date;
+    private LocalDate date;
 
     // コンストラクタ、ゲッター、セッター
-    public Result(String shopId, String date) {
+    public Result(String shopId, LocalDate date) {
         this.shopId = shopId;
         this.date = date;
     }
@@ -63,7 +64,7 @@ class Result {
         return shopId;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 }
@@ -71,17 +72,17 @@ class Result {
 public class UniqueMapExample {
     public static void main(String[] args) {
         List<Sale> listA = Arrays.asList(
-        	new Sale("1", "2024-01-03", 2000),
-            new Sale("1", "2024-01-01", 1000),
-            new Sale("2", "2024-01-02", 1500),
-            new Sale("2", "2024-01-02", 2500),
-            new Sale("1", "2024-01-01", 1000) // 重複
+        	new Sale("1", LocalDate.of(2024, 1, 3), 2000),
+            new Sale("1", LocalDate.of(2024, 1, 1), 1000),
+            new Sale("2", LocalDate.of(2024, 1, 2), 1500),
+            new Sale("2", LocalDate.of(2024, 1, 2), 2500),
+            new Sale("1", LocalDate.of(2024, 1, 1), 1000) // 重複
         );
 
         List<Cancellation> listB = Arrays.asList(
-            new Cancellation("1", "2024-01-01", 200),
-            new Cancellation("3", "2024-01-03", 500),
-            new Cancellation("1", "2024-01-05", 1000)
+            new Cancellation("1", LocalDate.of(2024, 1, 1), 200),
+            new Cancellation("3", LocalDate.of(2024, 1, 3), 500),
+            new Cancellation("1", LocalDate.of(2024, 1, 5), 1000)
         );
         
         Comparator<Result> comparator =
@@ -99,6 +100,12 @@ public class UniqueMapExample {
         uniqueMap.removeIf(p->!seen.add(p.getShopId() + p.getDate()));
 
         // 結果を表示
+        System.out.println("重複削除後");
         uniqueMap.forEach(s -> System.out.println("Shop ID: " + s.getShopId() + ", Date: " + s.getDate()));
+        
+        List<Sale> saleList = listA.stream().filter(s-> s.getShopId().equals("1") && s.getDate().equals(LocalDate.of(2024, 1, 1))).collect(Collectors.toList());
+        
+        System.out.println("フィルター後");
+        saleList.forEach(s -> System.out.println("Shop ID: " + s.getShopId() + ", Date: " + s.getDate()));
     }
 }
